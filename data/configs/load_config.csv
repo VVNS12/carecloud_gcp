@@ -1,0 +1,11 @@
+database,datasource,tablename,loadtype,watermark,is_active,targetpath
+highmarkhealth-mysql-db,highmarkhealth_db,encounters,Incremental,ModifiedDate,1,highmarkhealth
+highmarkhealth-mysql-db,highmarkhealth_db,patients,Incremental,ModifiedDate,1,highmarkhealth
+highmarkhealth-mysql-db,highmarkhealth_db,transactions,Incremental,ModifiedDate,1,highmarkhealth
+highmarkhealth-mysql-db,highmarkhealth_db,providers,Full,,1,highmarkhealth
+highmarkhealth-mysql-db,highmarkhealth_db,departments,Full,,1,highmarkhealth
+clevelandclinic-mysql-db,clevelandclinic_db,encounters,Incremental,ModifiedDate,1,clevelandclinic
+clevelandclinic-mysql-db,clevelandclinic_db,patients,Incremental,ModifiedDate,1,clevelandclinic
+clevelandclinic-mysql-db,clevelandclinic_db,transactions,Incremental,ModifiedDate,1,clevelandclinic
+clevelandclinic-mysql-db,clevelandclinic_db,providers,Full,,1,clevelandclinic
+clevelandclinic-mysql-db,clevelandclinic_db,departments,Full,,1,clevelandclinic
