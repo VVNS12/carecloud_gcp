@@ -25,9 +25,9 @@ SELECT DISTINCT
         ELSE FALSE 
     END AS is_quarantined
 FROM (
-    SELECT DISTINCT *, 'hosa' AS datasource FROM `vvns-bigquery.bronze_dataset.departments_ha`
+    SELECT DISTINCT *, 'hosa' AS datasource FROM `vvns-bigquery.bronze_dataset.departments_hm`
     UNION ALL
-    SELECT DISTINCT *, 'hosb' AS datasource FROM `vvns-bigquery.bronze_dataset.departments_hb`
+    SELECT DISTINCT *, 'hosb' AS datasource FROM `vvns-bigquery.bronze_dataset.departments_cv`
 );
 
 -------------------------------------------------------------------------------------------------------
@@ -62,9 +62,9 @@ SELECT DISTINCT
         ELSE FALSE 
     END AS is_quarantined
 FROM (
-    SELECT DISTINCT *, 'hosa' AS datasource FROM `vvns-bigquery.bronze_dataset.providers_ha`
+    SELECT DISTINCT *, 'hosa' AS datasource FROM `vvns-bigquery.bronze_dataset.providers_hm`
     UNION ALL
-    SELECT DISTINCT *, 'hosb' AS datasource FROM `vvns-bigquery.bronze_dataset.providers_hb`
+    SELECT DISTINCT *, 'hosb' AS datasource FROM `vvns-bigquery.bronze_dataset.providers_cv`
 );
 
 -------------------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ FROM (
         Address,
         ModifiedDate,
         'hosa' AS datasource
-    FROM `vvns-bigquery.bronze_dataset.patients_ha`
+    FROM `vvns-bigquery.bronze_dataset.patients_hm`
     
     UNION ALL
 
@@ -137,7 +137,7 @@ FROM (
         Address,
         ModifiedDate,
         'hosb' AS datasource
-    FROM `vvns-bigquery.bronze_dataset.patients_hb`
+    FROM `vvns-bigquery.bronze_dataset.patients_cv`
 );
 
 -- 3. Apply SCD Type 2 Logic with MERGE
@@ -146,7 +146,7 @@ USING `vvns-bigquery.silver_dataset.quality_checks` AS source
 ON target.Patient_Key = source.Patient_Key
 AND target.is_current = TRUE 
 
--- Step 1: Mark existing records as historical if any column has changed
+-- Step 1: Mark existing records as historical if any column hms chmnged
 WHEN MATCHED AND (
     target.SRC_PatientID <> source.SRC_PatientID OR
     target.FirstName <> source.FirstName OR
@@ -271,9 +271,9 @@ SELECT DISTINCT
         ELSE FALSE
     END AS is_quarantined
 FROM (
-    SELECT DISTINCT *, 'hosa' AS datasource FROM `vvns-bigquery.bronze_dataset.transactions_ha`
+    SELECT DISTINCT *, 'hosa' AS datasource FROM `vvns-bigquery.bronze_dataset.transactions_hm`
     UNION ALL
-    SELECT DISTINCT *, 'hosb' AS datasource FROM `vvns-bigquery.bronze_dataset.transactions_hb`
+    SELECT DISTINCT *, 'hosb' AS datasource FROM `vvns-bigquery.bronze_dataset.transactions_cv`
 );
 
 -- 3. Apply SCD Type 2 Logic with MERGE
@@ -282,7 +282,7 @@ USING `vvns-bigquery.silver_dataset.quality_checks` AS source
 ON target.Transaction_Key = source.Transaction_Key
 AND target.is_current = TRUE 
 
--- Step 1: Mark existing records as historical if any column has changed
+-- Step 1: Mark existing records as historical if any column hms chmnged
 WHEN MATCHED AND (
     target.SRC_TransactionID <> source.SRC_TransactionID OR
     target.EncounterID <> source.EncounterID OR
@@ -424,7 +424,7 @@ FROM (
         ProcedureCode,
         ModifiedDate,
         'hosa' AS datasource
-    FROM `vvns-bigquery.bronze_dataset.encounters_ha`
+    FROM `vvns-bigquery.bronze_dataset.encounters_hm`
     
     UNION ALL
 
@@ -438,7 +438,7 @@ FROM (
         ProcedureCode,
         ModifiedDate,
         'hosb' AS datasource
-    FROM `vvns-bigquery.bronze_dataset.encounters_hb`
+    FROM `vvns-bigquery.bronze_dataset.encounters_cv`
 );
 
 -- 3. Apply SCD Type 2 Logic with MERGE
@@ -447,7 +447,7 @@ USING `vvns-bigquery.silver_dataset.quality_checks_encounters` AS source
 ON target.Encounter_Key = source.Encounter_Key
 AND target.is_current = TRUE 
 
--- Step 1: Mark existing records as historical if any column has changed
+-- Step 1: Mark existing records as historical if any column hms chmnged
 WHEN MATCHED AND (
     target.SRC_EncounterID <> source.SRC_EncounterID OR
     target.PatientID <> source.PatientID OR
@@ -589,7 +589,7 @@ USING `vvns-bigquery.silver_dataset.quality_checks_claims` AS source
 ON target.Claim_Key = source.Claim_Key
 AND target.is_current = TRUE 
 
--- Step 1: Mark existing records as historical if any column has changed
+-- Step 1: Mark existing records as historical if any column hms chmnged
 WHEN MATCHED AND (
     target.SRC_ClaimID <> source.SRC_ClaimID OR
     target.TransactionID <> source.TransactionID OR
@@ -719,7 +719,7 @@ USING `vvns-bigquery.silver_dataset.quality_checks_cpt_codes` AS source
 ON target.CP_Code_Key = source.CP_Code_Key
 AND target.is_current = TRUE 
 
--- Step 1: Mark existing records as historical if any column has changed
+-- Step 1: Mark existing records as historical if any column hms chmnged
 WHEN MATCHED AND (
     target.procedure_code_category <> source.procedure_code_category OR
     target.cpt_codes <> source.cpt_codes OR
